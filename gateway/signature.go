@@ -9,7 +9,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"payermac-sdk-go/config"
+	"github.com/tiz36/payermax-sdk-go/config"
 )
 
 func Sign(config *config.PayMaxConfig, reqStr string) (string, error) {

@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"payermac-sdk-go/api"
-	"payermac-sdk-go/config"
-	"payermac-sdk-go/gateway"
+	"github.com/tiz36/payermax-sdk-go/api"
+	"github.com/tiz36/payermax-sdk-go/config"
+	"github.com/tiz36/payermax-sdk-go/gateway"
 	"time"
 )
 

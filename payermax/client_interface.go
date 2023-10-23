@@ -1,7 +1,7 @@
 package payermax
 
 import (
-	"payermac-sdk-go/config"
+	"github.com/tiz36/payermax-sdk-go/config"
 )
 
 type PayerMaxClient interface {
