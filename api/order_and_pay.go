@@ -71,7 +71,16 @@ type OrderAndPayApiReqData struct {
 	SeparateAccountInfo []*SeparateAccountInfo `json:"separateAccountInfo,omitempty"`
 }
 
-type OrderAndPayApiRespData = map[string]any
+type OrderAndPayApiRespData struct {
+	// [must] 收银台支付跳转链接
+	RedirectUrl string `json:"redirectUrl"`
+	// [must] 商户订单号
+	OutTradeNo string `json:"outTradeNo"`
+	// [must] payermax订单号
+	TradeToken string `json:"tradeToken"`
+	// [must] 交易状态
+	Status string `json:"status"`
+}
 
 type PaymentDetail struct {
 	// [optional] 卡token支付时，此字段为必填

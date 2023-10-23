@@ -26,4 +26,13 @@ type RefundReqData struct {
 	RefundNotifyUrl string `json:"refundNotifyUrl,omitempty"`
 }
 
-type RefundRespData = map[string]any
+type RefundRespData struct {
+	// [must] 商户退款申请号
+	OutRefundNo string `json:"outRefundNo"`
+	// [must] 交易订单号
+	TradeOrderNo string `json:"tradeOrderNo"`
+	// [must] payermax 退款单号
+	RefundTradeNo string `json:"refundTradeNo"`
+	// [must] 退款状态：REFUND_PENDING，REFUND_FAILED
+	Status string `json:"status"`
+}
