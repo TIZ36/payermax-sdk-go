@@ -1,4 +1,4 @@
-module payermac-sdk-go
+module github.com/tiz36/payermax-sdk-go
 
 go 1.21.3
 
