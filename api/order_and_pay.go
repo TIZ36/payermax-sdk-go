@@ -22,7 +22,7 @@ type OrderAndPayApiReqData struct {
 	// [must] 标价币种，大写字母，参见【交易支持国家/地区与币种】
 	Currency string `json:"currency"`
 
-	// [must] 国家代码，大写字母，如果所传的国家代码与币种不匹配，则以货币代码对应的地区展示收银台。如指定了支付方式，则国家必须上送，参见【交易支持国家/地区与币种】如果下单不传国家，PayerMax判断用户地区方案优先级为：参数所传币种>参数所传国家 >根据用户使用习惯，之前使用过的国家 > 用户ip > 让用户自己选择地区
+	// [optional] 国家代码，大写字母，如果所传的国家代码与币种不匹配，则以货币代码对应的地区展示收银台。如指定了支付方式，则国家必须上送，参见【交易支持国家/地区与币种】如果下单不传国家，PayerMax判断用户地区方案优先级为：参数所传币种>参数所传国家 >根据用户使用习惯，之前使用过的国家 > 用户ip > 让用户自己选择地区
 	Country string `json:"country"`
 
 	// [must] 商户内部的用户Id，需要保证每个ID唯一性，支付方式保存后会根据userId进行支付方式推荐
@@ -134,6 +134,8 @@ type BuyerInfo struct {
 	ClientIp string `json:"clientIp,omitempty"`
 	// [optional]
 	UserAgent string `json:"userAgent,omitempty"`
+	// [optional]
+	Email string `json:"email,omitempty"`
 }
 
 type EnvInfo struct {
