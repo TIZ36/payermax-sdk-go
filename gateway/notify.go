@@ -30,3 +30,10 @@ type PayerMaxNotify struct {
 func (notify *PayerMaxNotify) IsSuccess() bool {
 	return notify.Code == SuccessReturn
 }
+
+func NotifySuccess() map[string]any {
+	return map[string]any{
+		"code": "SUCCESS",
+		"msg":  "Success",
+	}
+}

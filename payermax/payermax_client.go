@@ -130,7 +130,6 @@ func (client *DefaultPayerMaxClient) ParseNotification(body string) (string, any
 
 	switch notify.NotifyType {
 	case gateway.NotifyTypePayment:
-
 		if paymentNotify, ok := notify.Data.(api.PaymentNotifyData); ok {
 			return gateway.NotifyTypePayment, paymentNotify, nil
 		} else {
