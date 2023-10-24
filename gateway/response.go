@@ -1,5 +1,7 @@
 package gateway
 
+import "github.com/tiz36/payermax-sdk-go/enum"
+
 type PayerMaxResponse struct {
 	Code string `json:"code"`
 	Msg  string `json:"msg"`
@@ -7,5 +9,5 @@ type PayerMaxResponse struct {
 }
 
 func (resp *PayerMaxResponse) IsSuccess() bool {
-	return resp.Code == SuccessReturn
+	return resp.Code == enum.ApplySuccess.Code
 }

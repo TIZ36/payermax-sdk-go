@@ -7,6 +7,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/tiz36/payermax-sdk-go/api"
 	"github.com/tiz36/payermax-sdk-go/config"
+	"github.com/tiz36/payermax-sdk-go/enum"
 	"github.com/tiz36/payermax-sdk-go/gateway"
 	"time"
 )
@@ -101,8 +102,6 @@ func (client *DefaultPayerMaxClient) SendRequestWithConfig(api string, params an
 			return "", err
 		}
 
-		// TODO: check signature
-
 		if !payermaxResp.IsSuccess() {
 			return nil, errors.New(
 				fmt.Sprintf("请求失败, Code: %v, Msg:%v", payermaxResp.Code, payermaxResp.Msg))
@@ -129,17 +128,17 @@ func (client *DefaultPayerMaxClient) ParseNotification(body string) (string, any
 	}
 
 	switch notify.NotifyType {
-	case gateway.NotifyTypePayment:
+	case enum.NotifyTypePayment:
 		if paymentNotify, ok := notify.Data.(api.PaymentNotifyData); ok {
-			return gateway.NotifyTypePayment, paymentNotify, nil
+			return enum.NotifyTypePayment, paymentNotify, nil
 		} else {
-			return gateway.NotifyTypePayment, nil, errors.New("invalid payment notify data")
+			return enum.NotifyTypePayment, nil, errors.New("invalid payment notify data")
 		}
-	case gateway.NotifyTypeRefund:
+	case enum.NotifyTypeRefund:
 		if refundNotify, ok := notify.Data.(api.RefundNotifyData); ok {
-			return gateway.NotifyTypeRefund, refundNotify, nil
+			return enum.NotifyTypeRefund, refundNotify, nil
 		} else {
-			return gateway.NotifyTypeRefund, nil, errors.New("invalid refund notify data")
+			return enum.NotifyTypeRefund, nil, errors.New("invalid refund notify data")
 		}
 	default:
 		return "", nil, errors.New("unknown notify type")

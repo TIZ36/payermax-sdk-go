@@ -73,13 +73,13 @@ type OrderAndPayApiReqData struct {
 
 type OrderAndPayApiRespData struct {
 	// [must] 收银台支付跳转链接
-	RedirectUrl string `json:"redirectUrl"`
+	RedirectUrl string `json:"redirectUrl,omitempty"`
 	// [must] 商户订单号
-	OutTradeNo string `json:"outTradeNo"`
+	OutTradeNo string `json:"outTradeNo,omitempty"`
 	// [must] payermax订单号
-	TradeToken string `json:"tradeToken"`
+	TradeToken string `json:"tradeToken,omitempty"`
 	// [must] 交易状态
-	Status string `json:"status"`
+	Status string `json:"status,omitempty"`
 }
 
 type PaymentDetail struct {

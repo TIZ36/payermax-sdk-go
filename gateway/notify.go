@@ -1,5 +1,7 @@
 package gateway
 
+import "github.com/tiz36/payermax-sdk-go/enum"
+
 // PayerMaxNotify 异步通知
 type PayerMaxNotify struct {
 	// 返回码，’APPLY_SUCCESS’代表成功
@@ -28,7 +30,7 @@ type PayerMaxNotify struct {
 }
 
 func (notify *PayerMaxNotify) IsSuccess() bool {
-	return notify.Code == SuccessReturn
+	return notify.Code == enum.ApplySuccess.Code
 }
 
 func NotifySuccess() map[string]any {
