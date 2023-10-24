@@ -23,4 +23,6 @@ type PayerMaxClient interface {
 	ParseNotification(body string) (string, any, error)
 
 	GetConfig() *config.PayMaxConfig
+
+	GetErr() error
 }

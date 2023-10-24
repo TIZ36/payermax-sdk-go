@@ -28,6 +28,8 @@ type DefaultPayerMaxClient struct {
 
 	// gateway
 	gateway string
+
+	Err error
 }
 
 // NewDefaultPayerMaxClient 创建一个默认的 PayerMaxClient
@@ -38,24 +40,94 @@ func NewDefaultPayerMaxClient() *DefaultPayerMaxClient {
 }
 
 // NewPayerMaxClientWithConfig 输入gateway和config 创建一个的 PayerMaxClient
-func NewPayerMaxClientWithConfig(gateway string, config *config.PayMaxConfig) PayerMaxClient {
+func NewPayerMaxClientWithConfig(gateway string, config *config.PayMaxConfig) (PayerMaxClient, error) {
+	if gateway == "" {
+		return nil, errors.New("gateway url is empty")
+	}
+	if config.MchNo == "" {
+		return nil, errors.New("merchant_no is empty")
+	}
+	if config.AppID == "" {
+		return nil, errors.New("app_id is empty")
+	}
+	if config.PayMaxPublicKey == "" {
+		return nil, errors.New("paymax_public_key is empty")
+	}
+	if config.MerchantPrivateKey == "" {
+		return nil, errors.New("merchant_private_key is empty")
+	}
+
+	if config.SecretType == "" {
+		config.SecretType = enum.DefaultSecretType
+	}
+	if config.ApiVersion == "" {
+		config.ApiVersion = enum.DefaultApiVersion
+	}
+	if config.KeyVersion == "" {
+		config.KeyVersion = enum.DefaultKeyVersion
+	}
+
 	return &DefaultPayerMaxClient{
 		restyClient: resty.New(),
 		config:      config,
 		gateway:     gateway,
-	}
+	}, nil
 }
 
 // SetGateway 设置环境，目标 PayerMax 的网关
 func (client *DefaultPayerMaxClient) SetGateway(gateway string) PayerMaxClient {
+	if client.Err != nil {
+		return client
+	}
+
+	if gateway == "" {
+		client.Err = errors.New("gateway url is empty")
+		return client
+	}
+
 	client.gateway = gateway
 	return client
 }
 
 // SetConfig 设置配置
 func (client *DefaultPayerMaxClient) SetConfig(config *config.PayMaxConfig) PayerMaxClient {
+	if client.Err != nil {
+		return client
+	}
+
+	if config.MchNo == "" {
+		client.Err = errors.New("merchant_no is empty")
+		return client
+	}
+	if config.AppID == "" {
+		client.Err = errors.New("app_id is empty")
+		return client
+	}
+	if config.PayMaxPublicKey == "" {
+		client.Err = errors.New("paymax_public_key is empty")
+		return client
+	}
+	if config.MerchantPrivateKey == "" {
+		client.Err = errors.New("merchant_private_key is empty")
+		return client
+	}
+
+	if config.SecretType == "" {
+		config.SecretType = enum.DefaultSecretType
+	}
+	if config.ApiVersion == "" {
+		config.ApiVersion = enum.DefaultApiVersion
+	}
+	if config.KeyVersion == "" {
+		config.KeyVersion = enum.DefaultKeyVersion
+	}
+
 	client.config = config
 	return client
+}
+
+func (client *DefaultPayerMaxClient) GetErr() error {
+	return client.Err
 }
 
 // SendRequest 发送请求
@@ -74,9 +146,6 @@ func (client *DefaultPayerMaxClient) SendRequestWithConfig(api string, params an
 	}
 
 	sign, _ := gateway.Sign(config, reqString)
-
-	fmt.Println("sign:", sign)
-	fmt.Println("reqString:", reqString)
 
 	// 构建http请求
 	req := client.restyClient.
