@@ -37,12 +37,9 @@ func Sign(config *config.PayMaxConfig, reqStr string) (string, error) {
 	return signatureBase64, nil
 }
 
-func Verify(data string, sign string, config *config.PayMaxConfig) (bool, error) {
+func Verify(data []byte, sign string, config *config.PayMaxConfig) (bool, error) {
 	// 从某处获取现有的 RSA 公钥（这里简化，实际应用中需要从安全存储中加载公钥）
 	publicKey, _ := ParsePublicKey([]byte(config.PayMaxPublicKey))
-
-	// 要验证的数据
-	dbin := []byte(data)
 
 	// 对签名进行 base64 解码
 	signature, err := base64.StdEncoding.DecodeString(sign)
@@ -52,7 +49,7 @@ func Verify(data string, sign string, config *config.PayMaxConfig) (bool, error)
 	}
 
 	// 计算 SHA-256 散列
-	hash := sha256.Sum256([]byte(dbin))
+	hash := sha256.Sum256(data)
 
 	// 验证签名
 	err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hash[:], signature)

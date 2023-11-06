@@ -181,14 +181,14 @@ func (client *DefaultPayerMaxClient) SendRequestWithConfig(api string, params an
 }
 
 // VerifyNotification 验证回调通知
-func (client *DefaultPayerMaxClient) VerifyNotification(body string, signature string) (bool, error) {
-	return gateway.Verify(body, signature, client.config)
+func (client *DefaultPayerMaxClient) VerifyNotification(data []byte, signature string) (bool, error) {
+	return gateway.Verify(data, signature, client.config)
 }
 
-func (client *DefaultPayerMaxClient) ParseNotification(body string) (string, any, error) {
+func (client *DefaultPayerMaxClient) ParseNotification(data []byte) (string, any, error) {
 	var notify gateway.PayerMaxNotify
 
-	if err := json.Unmarshal([]byte(body), &notify); err != nil {
+	if err := json.Unmarshal(data, &notify); err != nil {
 		return "", nil, err
 	}
 

@@ -18,9 +18,9 @@ type PayerMaxClient interface {
 	SendRequestWithConfig(api string, req any, config *config.PayMaxConfig) (any, error)
 
 	// VerifyNotification 验证回调通知
-	VerifyNotification(body string, signature string) (bool, error)
+	VerifyNotification(data []byte, signature string) (bool, error)
 
-	ParseNotification(body string) (string, any, error)
+	ParseNotification(data []byte) (string, any, error)
 
 	GetConfig() *config.PayMaxConfig
 
