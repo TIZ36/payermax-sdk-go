@@ -60,6 +60,7 @@ func NewPayerMaxClientWithConfig(gateway string, config *config.PayMaxConfig) (P
 	if config.SecretType == "" {
 		config.SecretType = enum.DefaultSecretType
 	}
+
 	if config.ApiVersion == "" {
 		config.ApiVersion = enum.DefaultApiVersion
 	}
@@ -181,14 +182,16 @@ func (client *DefaultPayerMaxClient) SendRequestWithConfig(api string, params an
 }
 
 // VerifyNotification 验证回调通知
-func (client *DefaultPayerMaxClient) VerifyNotification(data []byte, signature string) (bool, error) {
-	return gateway.Verify(data, signature, client.config)
+func (client *DefaultPayerMaxClient) VerifyNotification(signData []byte, signature string) (bool, error) {
+	return gateway.Verify(signData, signature, client.config)
 }
 
-func (client *DefaultPayerMaxClient) ParseNotification(data []byte) (string, any, error) {
+func (client *DefaultPayerMaxClient) ParseNotification(signData []byte) (string, any, error) {
 	var notify gateway.PayerMaxNotify
+	var dataBin []byte
+	var err error
 
-	if err := json.Unmarshal(data, &notify); err != nil {
+	if err := json.Unmarshal(signData, &notify); err != nil {
 		return "", nil, err
 	}
 
@@ -196,18 +199,24 @@ func (client *DefaultPayerMaxClient) ParseNotification(data []byte) (string, any
 		return notify.NotifyType, nil, errors.New("notify is not success")
 	}
 
+	if dataBin, err = json.Marshal(notify.Data); err != nil {
+		return "", nil, errors.New("unknown notify data: " + err.Error())
+	}
+
 	switch notify.NotifyType {
 	case enum.NotifyTypePayment:
-		if paymentNotify, ok := notify.Data.(api.PaymentNotifyData); ok {
-			return enum.NotifyTypePayment, paymentNotify, nil
-		} else {
+		var paymentNotify api.PaymentNotifyData
+		if err := json.Unmarshal(dataBin, &paymentNotify); err != nil {
 			return enum.NotifyTypePayment, nil, errors.New("invalid payment notify data")
+		} else {
+			return enum.NotifyTypePayment, paymentNotify, nil
 		}
 	case enum.NotifyTypeRefund:
-		if refundNotify, ok := notify.Data.(api.RefundNotifyData); ok {
-			return enum.NotifyTypeRefund, refundNotify, nil
-		} else {
+		var refundNotify api.RefundNotifyData
+		if err := json.Unmarshal(dataBin, &refundNotify); err != nil {
 			return enum.NotifyTypeRefund, nil, errors.New("invalid refund notify data")
+		} else {
+			return enum.NotifyTypeRefund, refundNotify, nil
 		}
 	default:
 		return "", nil, errors.New("unknown notify type")

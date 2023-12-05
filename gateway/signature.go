@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/tiz36/payermax-sdk-go/config"
+	"log"
 )
 
 func Sign(config *config.PayMaxConfig, reqStr string) (string, error) {
@@ -80,17 +81,17 @@ func ParsePKCS1PrivateKey(data []byte) (key *rsa.PrivateKey, err error) {
 
 func ParsePublicKey(data []byte) (key *rsa.PublicKey, err error) {
 	var block *pem.Block
+	// Decode the PEM-encoded public key
 	block, _ = pem.Decode(data)
 	if block == nil {
-		return nil, errors.New("public key error")
+		log.Fatal("Failed to decode PEM block")
 	}
 
-	var pubInterface interface{}
-	pubInterface, err = x509.ParsePKIXPublicKey(block.Bytes)
+	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
-	key, ok := pubInterface.(*rsa.PublicKey)
+	key, ok := publicKey.(*rsa.PublicKey)
 	if !ok {
 		return nil, errors.New("public key error")
 	}
