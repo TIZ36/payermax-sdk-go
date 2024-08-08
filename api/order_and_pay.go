@@ -99,6 +99,8 @@ type PaymentDetail struct {
 
 	// [optional] 用户基本信。备注：巴西国家下该字段必填
 	BuyerInfo *BuyerInfo `json:"buyerInfo,omitempty"`
+
+	AllowedCardOrg []string `json:"allowedCardOrg,omitempty"`
 }
 
 type PaymentAccountInfo struct {
